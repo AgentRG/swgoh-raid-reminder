@@ -11,10 +11,8 @@ import java.util.Arrays;
 
 public class Add extends Command {
 
+    private final String regex = "^rr.add [PTS] [0-23]{1,2}:[0-5]\\d ([0-9]|[0-5]\\d|60)$";
     private final ReadyStrings strings = new ReadyStrings();
-    private final String correctPitRaidSyntax = "rr.add !" + strings.thePitPrefix() + "-.*\\d.*:.*\\d.*,.*\\d.*";
-    private final String correctTankRaidSyntax = "rr.add !" + strings.theTankTakedownPrefix() + "-.*\\d.*:.*\\d.*,.*\\d.*";
-    private final String correctSithRaidSyntax = "rr.add !" + strings.theSithTriumviratePrefix() + "-.*\\d.*:.*\\d.*,.*\\d.*";
     private String sqlRaidValue;
     private String raidName;
 
@@ -36,9 +34,7 @@ public class Add extends Command {
             }
             String content = commandEvent.getMessage().getContentRaw();
             String channel = String.valueOf(commandEvent.getChannel());
-            if (content.matches(correctPitRaidSyntax)
-                    || content.matches(correctTankRaidSyntax)
-                    || content.matches(correctSithRaidSyntax)) {
+            if (content.matches(regex)) {
                 buildGoodAddReply(commandEvent, content, channel);
             } else {
                 buildBadAddReply(commandEvent);
@@ -50,7 +46,8 @@ public class Add extends Command {
      * @param content collects what was written by the user in the Add command.
      */
     private void setRaidPrefixAndRaidName(String content) {
-        String contentRaid = content.split("!")[1].split("-")[0];
+        String contentRaid = content.split(" ")[1];
+        System.out.println(contentRaid);
         switch (contentRaid) {
             case "P":
                 sqlRaidValue = strings.thePitShortName();
@@ -72,10 +69,10 @@ public class Add extends Command {
      * @return returns the UTC time when the raid starts and how many minutes to send the reply prior to raid start.
      */
     private int[] extractAddData(String content) {
-        String extractNumbers = content.replaceAll("[^0-9:,]", "");
-        String removeColonAndComma = extractNumbers.replaceAll(":", " ");
-        removeColonAndComma = removeColonAndComma.replaceAll(",", " ");
-        return Arrays.stream(removeColonAndComma.split(" ")).mapToInt(Integer::parseInt).toArray();
+        String extractNumbers = content.replaceAll("[^ 0-9:]", "");
+        extractNumbers = extractNumbers.replaceAll(":", " ");
+        extractNumbers = extractNumbers.substring(2);
+        return Arrays.stream(extractNumbers.split(" ")).mapToInt(Integer::parseInt).toArray();
     }
 
     /**
@@ -99,8 +96,8 @@ public class Add extends Command {
                     .build());
         } else {
             //Bug fix. If the raid start time ends with :00, it would've posted a :0 instead in the confirmation reply.
-            if (individualNumbers[1] == 0) {
-                startTime = "00";
+            if (Integer.toString(individualNumbers[1]).matches("[1-9]")) {
+                startTime = "0" + individualNumbers[1];
             } else {
                 startTime = Integer.toString(individualNumbers[1]);
             }
@@ -145,6 +142,6 @@ public class Add extends Command {
      * @return returns the UTC time when the raid starts and how many minutes to send the reply prior to raid start.
      */
     private String sqlTimeValue(String content) {
-        return content.replaceAll("[^0-9:,]", "");
+        return content.replaceAll("[^ 0-9:]", "").substring(2).replaceAll(" ", ",");
     }
 }

@@ -17,10 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Start extends Command {
 
+    private final String regex = "^rr.start [PTS]$";
     private final ReadyStrings strings = new ReadyStrings();
-    private final String correctPitRaidSyntax = "rr.start !" + strings.thePitPrefix();
-    private final String correctTankRaidSyntax = "rr.start !" + strings.theTankTakedownPrefix();
-    private final String correctSithRaidSyntax = "rr.start !" + strings.theSithTriumviratePrefix();
     private String sqlRaidValue;
 
     public Start() {
@@ -29,18 +27,18 @@ public class Start extends Command {
         "\n" +
                 "This Discord bot is based from UTC and uses a 24 hour cycle.\n" +
                 "\n" +
-                "All commands are preceded by:\n_!P_  (The Pit)\n_!T_  (Tank Takedown)\n_!S_  (The Sith Triumvirate)\n" +
+                "All commands are preceded by:\n_P_  (The Pit)\n_T_  (Tank Takedown)\n_S_  (The Sith Triumvirate)\n" +
                 "\n" +
                 "Add command:\n" +
-                "_!$-HH:MM,MM_\n" +
+                "_rr.add $ HH:MM MM_\n" +
                 "\n" +
                 "Start command:\n" +
-                "_!$_" +
+                "_rr.start $_" +
                 "\n" +
                 "\n" +
-                "Example:\n_--add !S-16:00,10_ - Add a new raid reminder for _The Sith Triumvirate_, which starts at 4PM. Remind 10 minutes prior." +
+                "Example:\n_rr.add S 16:00 10_ - Add a new raid reminder for _The Sith Triumvirate_, which starts at 4PM. Remind 10 minutes prior." +
                 "\n" +
-                "_--start !S_ - Start the reminder set for _The Sith Triumvirate_." +
+                "_rr.start S_ - Start the reminder set for _The Sith Triumvirate_." +
                 "\n" +
                 "\n" +
                 "Note: All reminders are saved locally. For future raids, just run the start command again." +
@@ -63,9 +61,7 @@ public class Start extends Command {
             }
             String content = commandEvent.getMessage().getContentRaw();
             String channel = String.valueOf(commandEvent.getChannel());
-            if (content.matches(correctPitRaidSyntax)
-                    || content.matches(correctTankRaidSyntax)
-                    || content.matches(correctSithRaidSyntax)) {
+            if (content.matches(regex)) {
                 buildGoodStartReply(commandEvent, channel, content);
             } else {
                 buildBadStartReply(commandEvent );
@@ -77,7 +73,7 @@ public class Start extends Command {
      * @param content collects what was written by the user in the Add command.
      */
     private void setRaidName(String content) {
-        String contentRaid = content.split("!")[1].split("-")[0];
+        String contentRaid = content.split(" ")[1];
         switch (contentRaid) {
             case "P":
                 sqlRaidValue = strings.thePitShortName();

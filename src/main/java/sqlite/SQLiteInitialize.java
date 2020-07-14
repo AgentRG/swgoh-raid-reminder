@@ -39,6 +39,10 @@ public class SQLiteInitialize {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        new Functions()
+                .sleep(5);
+
         return this;
     }
 
@@ -64,5 +68,9 @@ public class SQLiteInitialize {
                 e.printStackTrace();
             }
         }
+
+        new Functions()
+                .sleep(5);
+
     }
 }
