@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class Add extends Command {
 
-    private final String regex = "^rr.add [PTS] [0-23]{1,2}:[0-5]\\d ([0-9]|[0-5]\\d|60)$";
+    private final String regex = "^rr.add [PTS] ([0-1]?[0-9]|2[0-3]):[0-5]\\d ([0-9]|[0-5]\\d|60)$";
     private final ReadyStrings strings = new ReadyStrings();
     private String sqlRaidValue;
     private String raidName;
