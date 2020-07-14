@@ -3,7 +3,7 @@ package utilities;
 public class ReadyStrings {
 
     public final String wrongSyntax() {
-        return "Wrong syntax. Please refer to --help";
+        return "Wrong syntax. Please refer to rr.help";
     }
 
     public final String error() {
@@ -28,18 +28,6 @@ public class ReadyStrings {
 
     public final String minutes() {
         return " minutes.";
-    }
-
-    public final String thePitPrefix() {
-        return "P";
-    }
-
-    public final String theTankTakedownPrefix() {
-        return "T";
-    }
-
-    public final String theSithTriumviratePrefix() {
-        return "S";
     }
 
     public final String thePitShortName() {
