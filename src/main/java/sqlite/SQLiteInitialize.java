@@ -6,12 +6,16 @@ import java.sql.*;
 
 public class SQLiteInitialize {
 
+    /**
+     * Path for the database will need to be set before the bot can function..
+     */
+
     Connection openConnection() {
 
         Connection connection = null;
 
         try {
-            String url = "jdbc:sqlite:F:/Database/db/database.db";
+            String url = "jdbc:sqlite:"; //Set path to the database
             System.out.println("Opening connection");
             connection = DriverManager.getConnection(url);
             System.out.println("Connection established");
@@ -23,8 +27,8 @@ public class SQLiteInitialize {
 
     public SQLiteInitialize newDatabase() {
 
-        String databaseName = "database.db";
-        String url = "jdbc:sqlite:F:/Database/db/" + databaseName;
+        String databaseName = "";
+        String url = "jdbc:sqlite:"; //Set path + database name
 
         try (Connection connection = DriverManager.getConnection(url)) {
             if (connection != null) {
