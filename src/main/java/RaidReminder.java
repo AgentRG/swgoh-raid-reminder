@@ -18,9 +18,13 @@ import java.util.List;
 
 public class RaidReminder {
 
+    /**
+     * Paths for the database and the config file from which Discord credentials will be read will need to be set before the bot can function.
+     */
+
     public static void main (String[] args) throws IOException, LoginException, InterruptedException {
 
-        File database = new File("F:/Database/db/database.db");
+        File database = new File(""); //Set path for the database
 
         if (!database.exists()) {
             new SQLiteInitialize()
@@ -28,7 +32,7 @@ public class RaidReminder {
                     .newTable();
         }
 
-        List<String> configFile = Files.readAllLines(Paths.get("F:/Database/config.txt"));
+        List<String> configFile = Files.readAllLines(Paths.get("")); //Set path for the config file containing Discord credentials
         BasicConfigurator.configure();
         EventWaiter waiter = new EventWaiter();
 
